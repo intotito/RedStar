@@ -1,0 +1,10 @@
+<resources>
+    <declare-styleable name="Canvas">
+        <attr name="exampleString" format="string" />
+        <attr name="exampleDimension" format="dimension" />
+        <attr name="exampleColor" format="color" />
+        <attr name="majorRadius" format="dimension"/>
+        <attr name="cuspRatio" format="float"/>
+        <attr name="exampleDrawable" format="color|reference" />
+    </declare-styleable>
+</resources>
