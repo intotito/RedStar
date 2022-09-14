@@ -12,6 +12,8 @@
         android:layout_height="match_parent"
         android:paddingLeft="20dp"
         android:paddingBottom="40dp"
+        app:majorRadius="100dp"
+        app:cuspRatio="0.36241"
         app:exampleDimension="24sp"
         app:exampleDrawable="@android:drawable/ic_menu_add"
         app:exampleString="Hello, Canvas"

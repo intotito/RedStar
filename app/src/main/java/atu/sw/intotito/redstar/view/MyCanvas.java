@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.shapes.Shape;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import atu.sw.intotito.redstar.R;
@@ -24,7 +25,10 @@ public class MyCanvas extends View {
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
     private Drawable mExampleDrawable;
     private Path star;
+    private float majorRadius;
+    private float minorRadius;
 
+    private Paint starPaint;
     private TextPaint mTextPaint;
     private float mTextWidth;
     private float mTextHeight;
@@ -59,6 +63,9 @@ public class MyCanvas extends View {
         mExampleDimension = a.getDimension(
                 R.styleable.Canvas_exampleDimension,
                 mExampleDimension);
+        majorRadius = a.getDimension(R.styleable.Canvas_majorRadius,
+                majorRadius);
+        minorRadius = a.getFloat(R.styleable.Canvas_cuspRatio, 0.5f) * majorRadius;
 
         if (a.hasValue(R.styleable.Canvas_exampleDrawable)) {
             mExampleDrawable = a.getDrawable(
@@ -72,6 +79,11 @@ public class MyCanvas extends View {
         mTextPaint = new TextPaint();
         mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextAlign(Paint.Align.LEFT);
+
+        // Set up a default Paint object for drawing
+        starPaint = new Paint();
+        starPaint.setStyle(Paint.Style.STROKE);
+        starPaint.setColor(Color.RED);
 
         // Update TextPaint and text measurements from attributes
         invalidateTextPaintAndMeasurements();
@@ -101,18 +113,32 @@ public class MyCanvas extends View {
         int contentWidth = getWidth() - paddingLeft - paddingRight;
         int contentHeight = getHeight() - paddingTop - paddingBottom;
 
+        drawStar(majorRadius, minorRadius, star, canvas);
         // Draw the text.
-        canvas.drawText(mExampleString,
+ /*       canvas.drawText(mExampleString,
                 paddingLeft + (contentWidth - mTextWidth) / 2,
                 paddingTop + (contentHeight + mTextHeight) / 2,
                 mTextPaint);
 
-        // Draw the example drawable on top of the text.
+*/        // Draw the example drawable on top of the text.
         if (mExampleDrawable != null) {
             mExampleDrawable.setBounds(paddingLeft, paddingTop,
                     paddingLeft + contentWidth, paddingTop + contentHeight);
-            mExampleDrawable.draw(canvas);
+    //        mExampleDrawable.draw(canvas);
         }
+    }
+
+    private void drawStar(float R, float r, Path path, Canvas canvas){
+        double rotation = 2 * Math.PI / 5f;
+        double angle = Math.PI / 2f;
+        path.moveTo(R,0);
+        for(int i = 0; i < 5; i++, angle += rotation){
+            Log.e("Check", "i = " + i + " cos(a) = " + Math.cos(angle));
+            path.lineTo(R + (float)(R * Math.cos(angle)), R - (float)(R * Math.sin(angle)));
+            float a = (float) (angle + rotation / 2f);
+            path.lineTo((float)(R - r * Math.cos(a)), (float)(R - r * Math.sin(a)));
+        }
+        canvas.drawPath(path, starPaint);
     }
 
     /**
