@@ -129,6 +129,18 @@ public class MyCanvas extends View {
         }
     }
 
+    /**
+     * This method draws a 5-pointed star by plotting the crest(s) and trough(s) of the
+     * Star. The drawing is done in 5 different phases implemented as a loop.
+     * The crest(s) are calculated as <code>(R * cosΘ, R * sinΘ)</code> and the troughs are
+     * calculated as <code>(r * cosΘ, r * sinΘ)</code> where <code>Θ</code> is the current angle
+     * of rotation which is a multiple of the angles between the crests or troughs, in the case
+     * of a 5-pointed star <code>= 360° / 5 = 72°</code>
+     * @param R Major Radius of the Star
+     * @param r Minor Radius of the Star
+     * @param path Path object that will draw the Star
+     * @param canvas Canvas object is passed into the method to effect the drawing
+     */
     private void drawStar(float R, float r, Path path, Canvas canvas){
         double rotation = 2 * Math.PI / 5f;
         double angle = rotation;//0.5 * Math.PI;
@@ -157,6 +169,7 @@ public class MyCanvas extends View {
             path.lineTo((float)(R - r * Math.cos(a)), (float)(R - r * Math.sin(a)));
         }
  */       canvas.drawPath(path, starPaint);
+ 
     }
 
     /**
