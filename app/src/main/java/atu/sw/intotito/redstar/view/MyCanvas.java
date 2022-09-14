@@ -83,6 +83,7 @@ public class MyCanvas extends View {
         // Set up a default Paint object for drawing
         starPaint = new Paint();
         starPaint.setStyle(Paint.Style.STROKE);
+        starPaint.setStrokeWidth(3f);
         starPaint.setColor(Color.RED);
 
         // Update TextPaint and text measurements from attributes
@@ -130,15 +131,32 @@ public class MyCanvas extends View {
 
     private void drawStar(float R, float r, Path path, Canvas canvas){
         double rotation = 2 * Math.PI / 5f;
-        double angle = Math.PI / 2f;
-        path.moveTo(R,0);
+        double angle = rotation;//0.5 * Math.PI;
+
+        canvas.drawArc(R - 10,
+                R - 10,
+                R + 10,
+                R + 10,
+                0f,
+                360,
+                true, starPaint);
+        path.moveTo((float)(R + R * Math.cos(angle)),
+                R - (float)(R * Math.sin(angle)));
         for(int i = 0; i < 5; i++, angle += rotation){
+            path.lineTo((float)(R + R * Math.cos(angle)),
+                    R - (float)(R * Math.sin(angle)));
+            path.lineTo((float)(R + r * Math.cos(angle + rotation / 2f)),
+                    R - (float)(r * Math.sin(angle + rotation / 2f)));
+        }
+        path.close();
+
+ /*       for(int i = 0; i < 5; i++, angle += rotation){
             Log.e("Check", "i = " + i + " cos(a) = " + Math.cos(angle));
             path.lineTo(R + (float)(R * Math.cos(angle)), R - (float)(R * Math.sin(angle)));
             float a = (float) (angle + rotation / 2f);
             path.lineTo((float)(R - r * Math.cos(a)), (float)(R - r * Math.sin(a)));
         }
-        canvas.drawPath(path, starPaint);
+ */       canvas.drawPath(path, starPaint);
     }
 
     /**
