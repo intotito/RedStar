@@ -114,7 +114,7 @@ public class MyCanvas extends View {
         int contentWidth = getWidth() - paddingLeft - paddingRight;
         int contentHeight = getHeight() - paddingTop - paddingBottom;
 
-        drawStar(majorRadius, minorRadius, star, canvas);
+        drawStar(9, majorRadius, minorRadius, star, canvas);
         // Draw the text.
  /*       canvas.drawText(mExampleString,
                 paddingLeft + (contentWidth - mTextWidth) / 2,
@@ -133,16 +133,17 @@ public class MyCanvas extends View {
      * This method draws a 5-pointed star by plotting the crest(s) and trough(s) of the
      * Star. The drawing is done in 5 different phases implemented as a loop.
      * The crest(s) are calculated as <code>(R * cosΘ, R * sinΘ)</code> and the troughs are
-     * calculated as <code>(r * cosΘ, r * sinΘ)</code> where <code>Θ</code> is the current angle
-     * of rotation which is a multiple of the angles between the crests or troughs, in the case
-     * of a 5-pointed star <code>= 360° / 5 = 72°</code>
+     * calculated as <code>(r * cosø, r * sinø)</code> where <code>Θ</code> is the current angle
+     * of rotation which is a multiple of the angles between the crests or troughs, and
+     * <code>ø = Θ + Θ / 2</code>. For a 5-pointed star <code>Θ = 360° / 5 = 72°,
+     * ø = 72 + 36 = 108</code>
      * @param R Major Radius of the Star
      * @param r Minor Radius of the Star
      * @param path Path object that will draw the Star
      * @param canvas Canvas object is passed into the method to effect the drawing
      */
-    private void drawStar(float R, float r, Path path, Canvas canvas){
-        double rotation = 2 * Math.PI / 5f;
+    private void drawStar(int points, float R, float r, Path path, Canvas canvas){
+        double rotation = 2 * Math.PI / points;
         double angle = rotation;//0.5 * Math.PI;
 
         canvas.drawArc(R - 10,
@@ -152,11 +153,15 @@ public class MyCanvas extends View {
                 0f,
                 360,
                 true, starPaint);
-        path.moveTo((float)(R + R * Math.cos(angle)),
-                R - (float)(R * Math.sin(angle)));
-        for(int i = 0; i < 5; i++, angle += rotation){
+
+        for(int i = 0; i < points; i++, angle += rotation){
+            if(i == 0)
+                path.moveTo((float)(R + R * Math.cos(angle)),
+                        R - (float)(R * Math.sin(angle)));
+            else
             path.lineTo((float)(R + R * Math.cos(angle)),
                     R - (float)(R * Math.sin(angle)));
+
             path.lineTo((float)(R + r * Math.cos(angle + rotation / 2f)),
                     R - (float)(r * Math.sin(angle + rotation / 2f)));
         }
